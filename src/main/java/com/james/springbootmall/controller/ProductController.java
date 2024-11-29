@@ -17,10 +17,19 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
+//    查詢全部資料
+    @GetMapping("/products")
+    public ResponseEntity<List<Product>> getAllProducts() {
+
+        List<Product> productList = productService.getProducts();
+        return  ResponseEntity.status(HttpStatus.OK).body(productList);
+    }
+
 //    查詢資料
     @GetMapping("/products/{productId}")
     public ResponseEntity<Product> getProduct(@PathVariable Integer productId) {
         Product product = productService.getProductById(productId);
+
         if (product != null) {
             return ResponseEntity.status(HttpStatus.OK).body(product) ;
         }else {
