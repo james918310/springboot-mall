@@ -28,6 +28,28 @@ public class ProductDaoImpl implements ProductDao {
 
 
     @Override
+    public Integer countProduct(ProductQueryParams productQueryParams) {
+
+        String sql = "SELECT count(*) FROM product WHERE 1=1";
+
+        Map<String, Object> map = new HashMap<>();
+
+        if (productQueryParams.getCategory() != null) {
+            sql += " AND category = :category";
+            map.put("category", productQueryParams.getCategory().name());
+        }
+
+        if (productQueryParams.getSearch() != null) {
+            sql += " AND product_name LIKE :search";
+            map.put("search", "%" + productQueryParams.getSearch() + "%");
+        }
+
+        Integer total = jdbcTemplate.queryForObject(sql, map, Integer.class);
+
+        return total;
+    }
+
+    @Override
     public List<Product> getProducts(ProductQueryParams productQueryParams) {
         String sql = "SELECT product_id, product_name, category, image_url, price, stock,"+
                 " description, created_date, last_modified_date FROM product WHERE 1=1";
@@ -52,10 +74,6 @@ public class ProductDaoImpl implements ProductDao {
 
         map.put("limit", productQueryParams.getLimit());
         map.put("offset", productQueryParams.getOffset());
-
-
-
-
 
          List<Product> productList = namedParameterJdbcTemplate.query(sql, map, new ProductRowMapper());
 
