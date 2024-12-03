@@ -1,6 +1,7 @@
 package com.james.springbootmall.dao.impl;
 
 import com.james.springbootmall.dao.UserDao;
+import com.james.springbootmall.dto.UserLoginRequest;
 import com.james.springbootmall.dto.UserRegisterRequest;
 import com.james.springbootmall.model.Product;
 import com.james.springbootmall.model.User;
@@ -61,6 +62,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     //    新增新的用戶
+
     @Override
     public Integer createUser(UserRegisterRequest userRegisterRequest) {
 
@@ -84,4 +86,5 @@ public class UserDaoImpl implements UserDao {
 
         return productId;
     }
+
 }
