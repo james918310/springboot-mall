@@ -1,11 +1,16 @@
 package com.james.springbootmall.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.sql.Timestamp;
 
 public class User {
     private Integer userId;
     private String email;
+
+    @JsonIgnore
     private String password;
+
     private Timestamp createdDate;
     private Timestamp lastModifiedDate;
 
