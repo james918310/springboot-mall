@@ -1,6 +1,7 @@
 package com.james.springbootmall.controller;
 
 import com.james.springbootmall.dto.CreateOrderRequest;
+import com.james.springbootmall.model.Order;
 import com.james.springbootmall.service.OrderService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -23,8 +24,12 @@ public class OrderController {
                                          @RequestBody @Valid CreateOrderRequest createOrderRequest) {
         Integer orderId = orderService.createOrder(userId,createOrderRequest);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(orderId);
+        Order order = orderService.getOrderById(orderId);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(order);
     }
+
+
 
 
 }
