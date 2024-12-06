@@ -5,6 +5,7 @@ import com.james.springbootmall.dao.ProductDao;
 import com.james.springbootmall.dao.UserDao;
 import com.james.springbootmall.dto.BuyItem;
 import com.james.springbootmall.dto.CreateOrderRequest;
+import com.james.springbootmall.dto.OrderQueryParams;
 import com.james.springbootmall.model.Order;
 import com.james.springbootmall.model.OrderItem;
 import com.james.springbootmall.model.Product;
@@ -44,6 +45,24 @@ public class OrderServiceImpl implements OrderService {
         order.setOrderItemsList(orderItemList);
 
         return order;
+    }
+
+    @Override
+    public List<Order> getOrders(OrderQueryParams orderQueryParams) {
+        List<Order> orderList = orderDao.getOrders(orderQueryParams);
+
+        for (Order order : orderList) {
+            List<OrderItem> orderItemList = orderDao.getOrderItemById(order.getOrderId());
+
+            order.setOrderItemsList(orderItemList);
+        }
+
+        return orderList;
+    }
+
+    @Override
+    public Integer countOrders(OrderQueryParams orderQueryParams) {
+        return orderDao.countOrder(orderQueryParams);
     }
 
     @Transactional  //在多個table中操作時加入這個可以增加資料的一致性
