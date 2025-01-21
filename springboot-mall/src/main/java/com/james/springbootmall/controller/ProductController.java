@@ -25,12 +25,14 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
-//    查詢全部資料
+    //    查詢全部資料
     @GetMapping("")
     public ResponseEntity<Page<Product>> getAllProducts(
 //            查詢條件
             @RequestParam(required = false) ProductCategory category,  //資料種類
             @RequestParam(required = false) String search,   //收尋查詢
+            @RequestParam(required = false) String minPrice, //價格區間最小值
+            @RequestParam(required = false) String maxPrice, //價格區間最大值
             //排序
             @RequestParam(defaultValue = "created_date") String orderBy, //依據哪個欄位排序
             @RequestParam(defaultValue = "desc") String sort,
@@ -47,6 +49,8 @@ public class ProductController {
         productQueryParams.setSort(sort);
         productQueryParams.setLimit(limit);
         productQueryParams.setOffset(offset);
+        productQueryParams.setMinPrice(minPrice);
+        productQueryParams.setMaxPrice(maxPrice);
 
         List<Product> productList = productService.getProducts(productQueryParams);
 
@@ -59,24 +63,24 @@ public class ProductController {
         page.setResults(productList);
 
 
-        return  ResponseEntity.status(HttpStatus.OK).body(page);
+        return ResponseEntity.status(HttpStatus.OK).body(page);
     }
 
-//    查詢資料
+    //    查詢資料
     @GetMapping("/{productId}")
     public ResponseEntity<Product> getProduct(@PathVariable Integer productId) {
         Product product = productService.getProductById(productId);
 
         if (product != null) {
-            return ResponseEntity.status(HttpStatus.OK).body(product) ;
-        }else {
+            return ResponseEntity.status(HttpStatus.OK).body(product);
+        } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
 
 
     @PostMapping("/")
-    public ResponseEntity<Product> createProduct(@RequestBody  @Valid ProductRequest productRequest) {
+    public ResponseEntity<Product> createProduct(@RequestBody @Valid ProductRequest productRequest) {
         Integer productId = productService.createProduct(productRequest);
         Product product = productService.getProductById(productId);
 
@@ -84,11 +88,11 @@ public class ProductController {
     }
 
     @PutMapping("/{productId}")
-        public ResponseEntity<Product> updateProduct(@PathVariable Integer productId,
+    public ResponseEntity<Product> updateProduct(@PathVariable Integer productId,
                                                  @RequestBody @Valid ProductRequest productRequest) {
         Product product = productService.getProductById(productId);
         if (product == null) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
 
         productService.updateProduct(productId, productRequest);
@@ -101,14 +105,6 @@ public class ProductController {
         productService.deleteProductById(productId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
-
-
-
-
-
-
-
-
 
 
 }

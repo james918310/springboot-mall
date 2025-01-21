@@ -12,10 +12,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
-import org.springframework.util.DigestUtils;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.HashMap;
@@ -49,10 +47,9 @@ public class UserServiceImpl implements UserService {
         return userDao.getUserById(userId);
     }
 
-//    註冊與對密碼的加密
+    //    註冊與對密碼的加密
     @Override
     public Integer register(UserRegisterRequest userRegisterRequest) {
-
 
 
         //檢查eamil是否被註冊
@@ -60,7 +57,7 @@ public class UserServiceImpl implements UserService {
 
         if (user != null) {
             log.warn("該email{}已經被註冊過了", userRegisterRequest.getEmail());
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"該 email 以註冊");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "該 email 以註冊");
         }
 
 //        使用BCryptY做加鹽與雜湊值
@@ -69,18 +66,18 @@ public class UserServiceImpl implements UserService {
         userRegisterRequest.setPassword(hashedPassword);
 
         //創建帳號
-        return  userDao.createUser(userRegisterRequest);
+        return userDao.createUser(userRegisterRequest);
     }
 
 
-//    登入
+    //    登入
     @Override
-    public   Map<String, Object> login(UserLoginRequest userLoginRequest) {
+    public Map<String, Object> login(UserLoginRequest userLoginRequest) {
         Map<String, Object> response = new HashMap<>();
         User user = userDao.getUserByEmail(userLoginRequest.getEmail());
         if (user == null) {
             log.warn("該email{}尚未註冊", userLoginRequest.getEmail());
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"該 email 尚未註冊");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "該 email 尚未註冊");
         }
 
 
@@ -96,7 +93,7 @@ public class UserServiceImpl implements UserService {
             response.put("token", token);
             response.put("user", user);
 
-        }else {
+        } else {
             log.warn("email{}的密碼不正確", userLoginRequest.getEmail());
             response.put("message", "密碼錯誤");
             response.put("status", "error");
@@ -107,10 +104,7 @@ public class UserServiceImpl implements UserService {
     }
 
 
-
-
-
-//    重新設定密碼: 回傳email值
+    //    重新設定密碼: 回傳email值
     @Override
     public void sendVerificationCode(String email) {
         User user = userDao.getUserByEmail(email);
@@ -128,10 +122,9 @@ public class UserServiceImpl implements UserService {
     }
 
 
-
-//    驗證碼是否正確
+    //    驗證碼是否正確
     public boolean verifyCode(String email, String code) {
-        
+
         String storedCode = verificationCodes.get(email);
         Long expiryTime = codeExpiryTimes.get(email);
 
@@ -157,11 +150,13 @@ public class UserServiceImpl implements UserService {
         userDao.updatePassword(userLoginRequest);
     }
 
+    //    google登入
     @Override
-    public void processGoogleLogin(String googleId, String email, String providerName) {
+    public Map<String, Object> processGoogleLogin(String googleId, String email, String providerName) {
+        Map<String, Object> response = new HashMap<>();
         // 檢查用戶是否存在
         User user = userDao.findByGoogleId(googleId);
-
+//        如果無此用戶自動創建帳號
         if (user == null) {
             // 如果用戶不存在，創建新用戶
             UserGoogleRegister userGoogleRegister = new UserGoogleRegister();
@@ -169,9 +164,30 @@ public class UserServiceImpl implements UserService {
             userGoogleRegister.setEmail(email);
             userGoogleRegister.setProviderName(providerName);
 
-            userDao.createGoogleUser(userGoogleRegister);
+            int productId = userDao.createGoogleUser(userGoogleRegister);
 
+            User newUser = userDao.getUserById(productId);
+
+            String userToken = jwtUtil.generateToken(newUser);
+            String token = "JWT_" + userToken;
+
+            // 返回的物件
+            response.put("message", "成功登入");
+            response.put("token", token);
+            response.put("user", user);
+            return response;
+
+        } else {
+            String userToken = jwtUtil.generateToken(user);
+            String token = "JWT_" + userToken;
+
+            // 返回的物件
+            response.put("message", "成功登入");
+            response.put("token", token);
+            response.put("user", user);
+            return response;
         }
+
     }
 
 

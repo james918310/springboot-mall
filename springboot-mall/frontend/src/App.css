@@ -1,0 +1,276 @@
+/* App.css */
+
+/* 頁面全局樣式 */
+/*body {*/
+/*    margin: 0;*/
+/*    font-family: Arial, sans-serif;*/
+/*    background-color: #f5f5f5;*/
+/*}*/
+
+/*.app {*/
+/*    display: flex;*/
+/*    flex-direction: column;*/
+/*    align-items: center;*/
+/*}*/
+
+/* 頁面標題區域 */
+.header {
+    background-color: #3f51b5; /* 藍色背景 */
+    color: white;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Header 內容容器 */
+.header-content {
+    display: flex;
+    align-items: center;
+    gap: 30px; /* 元素間距 */
+    width: 100%;
+}
+
+.header h1 {
+    margin: 0;
+    font-size: 2rem;
+    flex-shrink: 0; /* 防止標題縮小 */
+}
+
+/* 搜尋框樣式 */
+.search-bar {
+    flex-grow: 0.5; /* 讓搜尋框自適應寬度 */
+    padding: 5px 10px;
+    border-radius: 4px;
+    border: none;
+    outline: none;
+    font-size: 1rem;
+}
+
+/* 購物車圖示樣式 */
+.cart-icon {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background-color: white;
+    border-radius: 50%;
+    color: #3f51b5;
+    font-size: 1.2rem;
+    cursor: pointer;
+}
+
+/* 購物車數量樣式 */
+.cart-count {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background-color: red;
+    color: white;
+    border-radius: 50%;
+    padding: 2px 6px;
+    font-size: 0.8rem;
+    font-weight: bold;
+}
+
+/* 主內容區域 */
+.main-content {
+    display: flex;
+    width: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+/* 側邊欄 */
+.sidebar {
+    width: 250px;
+    padding: 10px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.categories {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.categories li {
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 4px;
+    margin-bottom: 5px;
+}
+
+.categories li.active {
+    background-color: #ff5722;
+    color: white;
+}
+
+.categories li:hover {
+    background-color: #ffe0b2;
+}
+
+/* 價格篩選區域 */
+input[type="range"] {
+    width: 100%;
+}
+
+.sidebar p {
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+/* 書籍列表 */
+.book-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+    flex: 1;
+    padding: 10px;
+}
+
+.book-card {
+    background-color: white;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.book-image {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.book-card h3 {
+    margin: 10px 0;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.book-card p {
+    margin: 5px 0;
+    color: #ff5722;
+    font-size: 14px;
+}
+
+.add-to-cart {
+    padding: 5px 10px;
+    background-color: #3f51b5;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.add-to-cart:hover {
+    background-color: #303f9f;
+}
+
+/* 分頁樣式 */
+.pagination {
+    display: flex;
+    height: 50px; /* 設置容器高度為 2000px */
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin-top: 20px;
+}
+
+.pagination button {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: white;
+    cursor: pointer;
+}
+
+.pagination button.active {
+    background-color: #3f51b5;
+    color: white;
+    font-weight: bold;
+}
+
+.pagination button:disabled {
+    background-color: #f0f0f0;
+    cursor: not-allowed;
+}
+
+.pagination span {
+    padding: 0 8px;
+}
+
+
+.dropdown {
+    padding: 5px;
+
+
+}
+
+.dropdown-container {
+    display: flex;
+    justify-content: flex-start;
+    gap: 10px;
+    padding: 10px 20px;
+
+}
+
+/*滑軌*/
+
+
+.range-slider {
+    width: 100%;
+    height: 10px;
+    background: #ddd;
+    border-radius: 5px;
+    /*position: relative;*/
+    margin: 30px 0;
+    /*padding: 30px;*/
+}
+
+/*滑軌主體*/
+.slider-track {
+    /*background: #3f51b5;*/
+    height: 15px;
+    border-radius: 6px;
+}
+
+/*球球*/
+.slider-thumb {
+    height: 20px;
+    width: 20px;
+    background: #3f51b5;
+    border-radius: 50%;
+    cursor: pointer;
+    position: relative;
+    outline: none;
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+}
+
+/*中間滑軌顏色*/
+.slider-track-1 {
+    background: #3f51b5;
+
+}
+
+.price-filter {
+    margin: 40px 0;
+}
+
+.price-filter p {
+    font-size: 14px;
+    margin: 5px 0;
+    color: #555;
+    text-align: center;
+}
+
+
+
+
+

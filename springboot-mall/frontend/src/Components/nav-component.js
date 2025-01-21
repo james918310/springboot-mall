@@ -1,7 +1,13 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import AuthService from "../services/auth.service";
 
-const NavComponent = () => {
+const NavComponent = ({ currentUser, setCurrentUser }) => {
+  const handleLogout = () => {
+    AuthService.logout(); //清空local storage
+    window.alert("登出成功");
+    setCurrentUser(null);
+  };
   return (
     <div>
       <nav>
@@ -26,24 +32,27 @@ const NavComponent = () => {
                     首頁
                   </Link>
                 </li>
-
-                <li className="nav-item">
-                  <Link className="nav-link" to="/register">
-                    註冊會員
-                  </Link>
-                </li>
-
-                <li className="nav-item">
-                  <Link className="nav-link" to="/login">
-                    會員登入
-                  </Link>
-                </li>
-
-                <li className="nav-item">
-                  <Link className="nav-link" to="/">
-                    登出
-                  </Link>
-                </li>
+                {!currentUser && (
+                  <li className="nav-item">
+                    <Link className="nav-link" to="/register">
+                      註冊會員
+                    </Link>
+                  </li>
+                )}
+                {!currentUser && (
+                  <li className="nav-item">
+                    <Link className="nav-link" to="/login">
+                      會員登入
+                    </Link>
+                  </li>
+                )}
+                {currentUser && (
+                  <li className="nav-item">
+                    <Link onClick={handleLogout} className="nav-link" to="/">
+                      登出
+                    </Link>
+                  </li>
+                )}
 
                 <li className="nav-item">
                   <Link className="nav-link" to="/profile">

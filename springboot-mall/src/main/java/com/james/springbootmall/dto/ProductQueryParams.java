@@ -1,12 +1,13 @@
 package com.james.springbootmall.dto;
 
 import com.james.springbootmall.constant.ProductCategory;
-import org.springframework.web.bind.annotation.RequestParam;
 
 public class ProductQueryParams {
 
     private ProductCategory category;
     private String search;
+    private String minPrice;
+    private String maxPrice;
 
     private String orderBy;
     private String sort;
@@ -60,5 +61,21 @@ public class ProductQueryParams {
 
     public void setSearch(String search) {
         this.search = search;
+    }
+
+    public String getMinPrice() {
+        return minPrice;
+    }
+
+    public void setMinPrice(String minPrice) {
+        this.minPrice = minPrice;
+    }
+
+    public String getMaxPrice() {
+        return maxPrice;
+    }
+
+    public void setMaxPrice(String maxPrice) {
+        this.maxPrice = maxPrice;
     }
 }
