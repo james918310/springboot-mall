@@ -1,86 +1,94 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
 import AuthService from "../services/auth.service";
+import { Link } from "react-router-dom";
+import { FaBook, FaShoppingCart, FaUserCircle } from "react-icons/fa";
 
-const NavComponent = ({ currentUser, setCurrentUser }) => {
+const NavComponent = ({
+  currentUser,
+  setCurrentUser,
+  searchQuery,
+  setSearchQuery,
+  cartItems,
+  setCartItems,
+}) => {
+  const [dropdownVisible, setDropdownVisible] = useState(false); // 控制下拉選單顯示
+
   const handleLogout = () => {
-    AuthService.logout(); //清空local storage
-    window.alert("登出成功");
-    setCurrentUser(null);
+    const confirmLogout = window.confirm("您確定要登出嗎？"); // 顯示確認視窗
+    if (confirmLogout) {
+      AuthService.logout(); // 清空 local storage
+      window.alert("登出成功");
+      setCurrentUser(null);
+    }
   };
+
+  const handleSearchChange = (event) => {
+    setSearchQuery(event.target.value); // 更新搜尋內容
+  };
+
   return (
     <div>
       <nav>
-        <nav className="navbar navbar-expand-lg navbar-light bg-light">
-          <div className="container-fluid">
-            <button
-              class="navbar-toggler"
-              type="button"
-              data-bs-toggle="collapse"
-              data-bs-target="#navbarNav"
-              aria-controls="navbarNav"
-              aria-expanded="false"
-              aria-label="Toggle navigation"
-            >
-              <span class="navbar-toggler-icon"></span>
-            </button>
-
-            <div className="collapse navbar-collapse" id="navbarNav">
-              <ul className="navbar-nav">
-                <li className="nav-item">
-                  <Link className="nav-link active" to="/">
-                    首頁
-                  </Link>
-                </li>
-                {!currentUser && (
-                  <li className="nav-item">
-                    <Link className="nav-link" to="/register">
-                      註冊會員
-                    </Link>
-                  </li>
-                )}
-                {!currentUser && (
-                  <li className="nav-item">
-                    <Link className="nav-link" to="/login">
-                      會員登入
-                    </Link>
-                  </li>
-                )}
-                {currentUser && (
-                  <li className="nav-item">
-                    <Link onClick={handleLogout} className="nav-link" to="/">
-                      登出
-                    </Link>
-                  </li>
-                )}
-
-                <li className="nav-item">
-                  <Link className="nav-link" to="/profile">
-                    個人頁面
-                  </Link>
-                </li>
-
-                <li className="nav-item">
-                  <Link className="nav-link" to="/course">
-                    課程頁面
-                  </Link>
-                </li>
-
-                <li className="nav-item">
-                  <Link className="nav-link" to="/postCourse">
-                    新增課程
-                  </Link>
-                </li>
-
-                <li className="nav-item">
-                  <Link className="nav-link" to="/enroll">
-                    註冊課程
-                  </Link>
-                </li>
-              </ul>
+        <header className="header">
+          <div className="header-content">
+            <FaBook size={30} />
+            <div>
+              <Link to="/" className="header-link">
+                <h1>Book Cart</h1>
+              </Link>
             </div>
+            <input
+              type="text"
+              placeholder="Search books or authors"
+              className="search-bar"
+              value={searchQuery}
+              onChange={handleSearchChange}
+            />
+            <Link className="shopping-icon" to="/ShoppingCar">
+              <div className="cart-icon">
+                <FaShoppingCart size={30} />
+                <span className="cart-count">{cartItems.length}</span>
+              </div>
+            </Link>
+            {!currentUser && (
+              <div className="login-register-container">
+                <Link className="login-button" to="/login">
+                  登入
+                </Link>
+                <Link className="register-button" to="/register">
+                  註冊
+                </Link>
+              </div>
+            )}
+
+            {currentUser && (
+              <div
+                className="user-dropdown"
+                onMouseEnter={() => setDropdownVisible(true)}
+                onMouseLeave={(e) => {
+                  // 檢查滑鼠是否離開了下拉範圍
+                  if (
+                    !e.relatedTarget ||
+                    !e.currentTarget.contains(e.relatedTarget)
+                  ) {
+                    setDropdownVisible(false);
+                  }
+                }}
+              >
+                <div className="user-icon">
+                  <FaUserCircle size={40} />
+                </div>
+                {dropdownVisible && (
+                  <div className="dropdown-menu">
+                    <p>個人資料</p>
+                    <Link to="/orderHistory">訂單紀錄</Link>
+                    <button onClick={handleLogout}>登出</button>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
-        </nav>
+        </header>
       </nav>
     </div>
   );

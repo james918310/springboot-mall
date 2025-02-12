@@ -14,13 +14,14 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authorize -> authorize
-
-                        .requestMatchers("/products","/users/register", "/users/login", "/users/forgot-password",
-                                "/users/verify-code", "/users/reset-password", "/users/login/oauth2/google").permitAll() // "/" 和 "/login" 無需認證
-                        .anyRequest().authenticated()          // 其他路徑需要認證
+                                .requestMatchers("/products", "/users/register", "/users/login", "/users/forgot-password",
+                                        "/users/verify-code", "/users/reset-password", "/users/login/oauth2/google",
+                                        "/users/*/shoppingCar", "/users/*/orders") // 允許購物車 API 不需要認證
+                                .permitAll()
+                        // 其他路徑需要認證
                 )
                 .oauth2Login(oauth2 -> oauth2
-                        .defaultSuccessUrl("/products")               // 登入成功後跳轉到首頁
+                        .defaultSuccessUrl("/products", true)               // 登入成功後跳轉到首頁
                 )
                 .addFilterBefore(jwtFilter, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter.class); // 添加 JWT 過濾器
 

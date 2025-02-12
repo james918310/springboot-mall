@@ -13,8 +13,6 @@ class ProductService {
     minPrice,
     maxPrice,
   ) {
-    console.log("server limit" + limit);
-    console.log("server selectedCategory" + selectedCategory);
     return axios.get(API_URL, {
       params: {
         category:

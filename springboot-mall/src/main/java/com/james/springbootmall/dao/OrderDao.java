@@ -20,5 +20,4 @@ public interface OrderDao {
     List<Order> getOrders(OrderQueryParams orderQueryParams);
 
 
-
 }

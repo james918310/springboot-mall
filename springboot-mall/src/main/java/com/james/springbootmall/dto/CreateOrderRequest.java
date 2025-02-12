@@ -8,6 +8,16 @@ public class CreateOrderRequest {
 
     @NotEmpty
     private List<BuyItem> buyItemList;
+    private String email;
+
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
     public List<BuyItem> getBuyItemList() {
         return buyItemList;

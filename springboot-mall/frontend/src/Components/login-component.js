@@ -39,6 +39,8 @@ const LoginComponent = ({ currentUser, setCurrentUser }) => {
     window.location.href = `http://localhost:8080/api/user/auth/google`;
   };
 
+  const resetPassword = () => {};
+
   // Google OAuth 回調處理
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -78,7 +80,7 @@ const LoginComponent = ({ currentUser, setCurrentUser }) => {
   }, []);
 
   return (
-    <div style={{ padding: "3rem" }} className="col-md-12">
+    <div style={{ padding: "3rem", margin: "70px" }} className="col-md-12">
       <div>
         <div className="form-group">
           <label htmlFor="username">電子信箱：</label>
@@ -103,6 +105,9 @@ const LoginComponent = ({ currentUser, setCurrentUser }) => {
         <div className="form-group">
           <button onClick={handleLogin} className="btn btn-primary btn-block">
             <span>登入系統</span>
+          </button>
+          <button onClick={resetPassword} className="btn btn-primary btn-block">
+            <span>忘記密碼</span>
           </button>
         </div>
         <br />

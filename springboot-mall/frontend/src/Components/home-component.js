@@ -3,13 +3,18 @@ import ReactSlider from "react-slider"; // 使用 react-slider 實現範圍滑�
 import "../App.css"; // 確保添加一些 CSS 來設置樣式
 import ProductService from "../services/product.service";
 
-const HomeComponent = () => {
+const HomeComponent = ({
+  searchQuery,
+  setSearchQuery,
+  cartItems,
+  setCartItems,
+}) => {
   // 狀態變量：用於存儲當前選中的分類
   const [selectedCategory, setSelectedCategory] = useState("All Categories");
   const [selectedDropdown, setSelectedDropdown] = useState("名稱A~Z"); // 用於存儲下拉選單值
   const [currentPage, setCurrentPage] = useState(1); // 用於存儲當前頁碼
   // 狀態變量：用於存儲搜尋查詢
-  const [searchQuery, setSearchQuery] = useState("");
+  // const [searchQuery, setSearchQuery] = useState("");
   // 狀態變量：用於存儲價格範圍
   const [minPrice, setMinPrice] = useState(1); // 最低價格
   const [maxPrice, setMaxPrice] = useState(10000000); // 最高價格
@@ -42,6 +47,26 @@ const HomeComponent = () => {
 
   const dropdownOptionsNumber = [1, 5, 10, 20, 30, 50, 100];
   const previousCategoryRef = useRef(selectedCategory); // 使用 useRef 追蹤 selectedCa
+
+  // 購物車儲存變數
+  const handleAddToCart = (productId) => {
+    setCartItems((prevItems) => {
+      const existingItem = prevItems.find(
+        (item) => item.productId === productId,
+      );
+      if (existingItem) {
+        // 商品已存在，增加数量
+        return prevItems.map((item) =>
+          item.productId === productId
+            ? { ...item, quantity: item.quantity + 1 }
+            : item,
+        );
+      } else {
+        // 商品不存在，新增
+        return [...prevItems, { productId, quantity: 1 }];
+      }
+    });
+  };
 
   // 處理分類切換
   const handleCategoryChange = async (categoryValue) => {
@@ -96,27 +121,6 @@ const HomeComponent = () => {
         setBooks(response.data.results); // 假設後端返回的資料結構中包含 results
 
         setTotalPages(Math.ceil(response.data.total / limit)); // 假設 total 為總記錄數
-
-        // if (previousCategoryRef.current !== selectedCategory) {
-        //   // 當 selectedCategory 發生變化時執行此邏輯
-        //   console.log(
-        //     "Category changed:",
-        //     previousCategoryRef.current,
-        //     "->",
-        //     selectedCategory,
-        //   );
-        //   previousCategoryRef.current = selectedCategory; // 更新 previousCategoryRef 的值
-        //
-        //   // 在此處添加需要執行的邏輯
-        //   if (books.length > 0) {
-        //     const prices = books.map((book) => book.price); // 提取價格數組
-        //     const maxPrice = Math.max(...prices); // 最大值
-        //     const minPrice = Math.min(...prices); // 最小值
-        //
-        //     setMaxPrice(maxPrice);
-        //     setMinPrice(minPrice);
-        //   }
-        // }
       } catch (error) {
         console.error("Failed to fetch books:", error);
       }
@@ -133,26 +137,10 @@ const HomeComponent = () => {
     minPrice,
     maxPrice,
   ]);
+  console.log(books);
 
   return (
     <div className="app">
-      {/* 頁面標題與搜尋欄 */}
-      <header className="header">
-        <div className="header-content">
-          <h1>Book Cart</h1>
-          <input
-            type="text"
-            placeholder="Search books or authors"
-            className="search-bar"
-            value={searchQuery}
-            onChange={handleSearchChange}
-          />
-          <div className="cart-icon">
-            <span className="cart-count">0</span>
-          </div>
-        </div>
-      </header>
-
       {/* 主內容區域 */}
       <div className="main-content">
         {/* 側邊欄，用於分類與價格篩選 */}
@@ -235,8 +223,13 @@ const HomeComponent = () => {
                 <h3>{book.productName}</h3> {/* 書籍標題 */}
                 <p>₹{book.price}</p> {/* 書籍價格 */}
                 <p>{book.description}</p> {/* 書籍描述 */}
-                <button className="add-to-cart">Add to Cart</button>
-                {/* 添加到購物車按鈕 */}
+                {/* 添加购物车按钮 */}
+                <button
+                  className="add-to-cart"
+                  onClick={() => handleAddToCart(book.productId)}
+                >
+                  Add to Cart
+                </button>
               </div>
             ))}
           </section>
